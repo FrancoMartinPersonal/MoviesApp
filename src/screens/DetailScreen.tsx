@@ -6,50 +6,53 @@ import { RootStackParamList } from '../navigation/Navigation'
 import useMovieDetails from '../hooks/useMovieDetails';
 import MovieDetails from '../components/MovieDetails'
 import Icon from 'react-native-vector-icons/Ionicons'
+import GradientBackground from '../components/GradientBackground';
 
 
 interface Props extends StackScreenProps<RootStackParamList, 'DetailScreen'> { }
 
 const screenHeight = Dimensions.get('screen').height
 
-const DetailScreen = ({ route,navigation }: Props) => {
+const DetailScreen = ({ route, navigation }: Props) => {
     const movie = route?.params
     const uri = `https://image.tmdb.org/t/p/w500${movie?.poster_path}`
     const { isLoading, cast, movieFull } = useMovieDetails(movie?.id)
     console.log(isLoading)
     return (
-        <ScrollView>
+       
+            <ScrollView>
 
-            <View style={styles.imageContainer}>
-                <TouchableOpacity style={styles.backBotton}
-                onPress={()=>navigation.goBack()}>
-                    <Icon
-                        color='white'
-                        name='arrow-back-outline'
-                        size={40}
-                    />
-                </TouchableOpacity>
-                <View style={styles.imageBorder}>
+                <View style={styles.imageContainer}>
+                    <TouchableOpacity style={styles.backBotton}
+                        onPress={() => navigation.goBack()}>
+                        <Icon
+                            color='white'
+                            name='arrow-back-outline'
+                            size={40}
+                        />
+                    </TouchableOpacity>
+                    <View style={styles.imageBorder}>
 
-                    <Image
-                        source={{ uri }}
-                        style={styles.posterImage}
-                    />
+                        <Image
+                            source={{ uri }}
+                            style={styles.posterImage}
+                        />
+
+                    </View>
+                </View>
+                <View style={styles.marginContainer}>
+                    <Text style={styles.subTitle}>{movie?.original_title}</Text>
+                    <Text style={styles.title}>{movie?.title}</Text>
+                </View>
+                <View style={styles.marginContainer}>
+
+                    {isLoading ? <ActivityIndicator size={40} color="grey" /> :
+                        <MovieDetails movieFull={movieFull!} cast={cast} />}
+                    {/* botón para cerrar*/}
 
                 </View>
-            </View>
-            <View style={styles.marginContainer}>
-                <Text style={styles.subTitle}>{movie?.original_title}</Text>
-                <Text style={styles.title}>{movie?.title}</Text>
-            </View>
-            <View style={styles.marginContainer}>
+            </ScrollView>
 
-                {isLoading ? <ActivityIndicator size={40} color="grey" /> :
-                    <MovieDetails movieFull={movieFull!} cast={cast} />}
-                {/* botón para cerrar*/}
-
-            </View>
-        </ScrollView>
     )
 }
 
@@ -92,12 +95,12 @@ const styles = StyleSheet.create({
     },
     backBotton: {
         marginVertical: 10,
-        marginHorizontal:10,
+        marginHorizontal: 10,
         backgroundColor: '#aaa8',
         width: 40,
         borderRadius: 50,
         position: 'absolute',
-        zIndex:1000
+        zIndex: 1000
     }
 })
 
